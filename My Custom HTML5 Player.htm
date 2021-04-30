@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width"><style>body{background:#000}#plr{position:relative;width:426px;height:240px}#vd,#br{width:100%}#vd{height:100%}button{font:bold 1em georgia;width:48px;height:48px;border:0;color:#0c0;background:linear-gradient(#444,#555)}#plb,#br,#optns{position:absolute}#plb{top:calc(50% - 24px);left:calc(50% - 24px);font-size:22px}#br{bottom:0}#fsb,#mn{float:right}#mn{font-size:34px}#optns,.hdn{display:none}#optns{right:48px;bottom:0}#prgBr{float:left;width:calc(100% - 96px);padding:17px 0;background:linear-gradient(#444,#555)}#prgBrFl{width:0;height:14px;background:#0c0}
+</style></head><body><div id="plr"><video id="vd" src="1.mp4" onclick="pl()" poster="pstr.webp" onended="clearTimeout(hdTmr);btns.className='';plb.innerHTML='►'"></video><div id="btns"><button id="plb" onclick="pl()">►</button><div id="br"><div id="prgBr"><div id="prgBrFl"></div></div><button id="fsb" onclick="hd();plr.requestFullscreen();document.exitFullscreen()">[ ]</button><button id="mn" onclick="hd();optns.style.display='block'">≡</button><div id="optns"><button onclick="hd();vd.currentTime=vd.currentTime-10">‹10s</button><button onclick="hd();vd.currentTime=vd.currentTime+10">10s›</button><button id="slw" onclick="hd();vd.playbackRate=vd.playbackRate-1;slw.innerHTML='«'+vd.playbackRate+'x';fst.innerHTML='»'">«</button><button id="fst" onclick="hd();vd.playbackRate=vd.playbackRate+1;fst.innerHTML=vd.playbackRate+'x»';slw.innerHTML='«'">»</button></div></div></div></div>
+
+<script>var prgBrFrq;var hdTmr;function pl(){
+if(vd.paused){vd.play();plb.innerHTML='II';prgBrFrq=setInterval(updPrg,811);hd()}else{
+if(btns.className!=''){btns.className='';hd()}else{
+clearTimeout(hdTmr);vd.pause();plb.innerHTML='►';clearInterval(prgBrFrq)}}};
+
+prgBr.onclick=function(mPx){hd();MsPs=mPx.clientX/prgBr.clientWidth;
+prgBrFl.style.width=MsPs*100+'%';
+vd.currentTime=MsPs*vd.duration
+};
+
+function updPrg(){prgBrFl.style.width=(vd.currentTime/vd.duration)*100+'%'};
+
+function hd(){if(!vd.paused){clearTimeout(hdTmr);
+hdTmr=setTimeout(function(){btns.className='hdn';optns.style.display='none'},3000)}}</script></body></html>
