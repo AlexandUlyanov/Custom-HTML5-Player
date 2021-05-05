@@ -85,25 +85,27 @@ function pl() {
   }
 };
 
-prg.onpointerdown = function(psX) {
+function prgFlF(psX) {
   ps = psX.offsetX / prg.clientWidth;
   vd.currentTime = ps * vd.duration;
   tmCnt();
-  prgFl.style.width = ps * 100 + '%';
-  prgCh = true
+  prgFl.style.width = ps * 100 + '%'
+};
+prg.onpointerdown = function(psX) {
+  prgCh = true;
+  prgFlF(psX)
 };
 prg.onpointermove = function(psX) {
   if (prgCh == true) {
     hd();
-    ps = psX.offsetX / prg.clientWidth;
-    vd.currentTime = ps * vd.duration;
-    tmCnt();
-    prgFl.style.width = ps * 100 + '%'
+    prgFlF(psX)
   }
 };
 window.onpointerup = function() {
   prgCh = false;
-  window.getSelection().collapseToEnd()
+  if (window.getSelection) {
+    window.getSelection().removeAllRanges()
+  }
 }
 
 </script></body></html>
