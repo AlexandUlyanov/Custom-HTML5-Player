@@ -85,14 +85,14 @@ function pl() {
   }
 };
 
-prg.onmousedown = function(psX) {
+prg.onpointerdown = function(psX) {
   ps = psX.offsetX / prg.clientWidth;
   vd.currentTime = ps * vd.duration;
   tmCnt();
   prgFl.style.width = ps * 100 + '%';
   prgCh = true
 };
-prg.onmousemove = function(psX) {
+prg.onpointermove = function(psX) {
   if (prgCh == true) {
     hd();
     ps = psX.offsetX / prg.clientWidth;
@@ -101,7 +101,7 @@ prg.onmousemove = function(psX) {
     prgFl.style.width = ps * 100 + '%'
   }
 };
-window.onmouseup = function() {
+window.onpointerup = function() {
   prgCh = false;
   window.getSelection().collapseToEnd()
 }
