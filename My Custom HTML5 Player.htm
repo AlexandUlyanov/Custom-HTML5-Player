@@ -10,7 +10,7 @@ button{width:48px;height:48px;overflow:hidden;border:0;color:#eee}
 #plB{top:calc(50% - 24px);left:calc(50% - 24px);font-size:25px}
 #prg,#crTm{margin-left:18px}
 #prg{width:calc(100% - 114px);height:48px}
-#prgInd{width:100%;height:3px;background:grey}
+#ldPrg{width:0;height:3px;background:grey}
 #prgFl{margin-top:13px;width:0;height:3px}
 #fs,#mn,#drtn{float:right}
 span{float:left;margin-top:20px;color:#3af}
@@ -22,11 +22,11 @@ svg{stroke-width:2;stroke:#eee}
 
 </style><title>Custom HTML5 Player</title></head><body>
 
-<div id="plr"><video id="vd" src="https://www.w3schools.com/html/mov_bbb.mp4" onclick="pl()" ondurationchange="drtn.innerHTML=parseInt(vd.duration/60)+':'+parseInt(vd.duration%60)" onended="clearInterval(prgFrq);clearTimeout(hdTmr);btns.className='';plB.innerHTML='►'"></video>
+<div id="plr"><video id="vd" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" onclick="pl()" ondurationchange="drtn.innerHTML=parseInt(vd.duration/60)+':'+parseInt(vd.duration%60)" onended="clearInterval(prgFrq);clearTimeout(hdTmr);btns.className='';plB.innerHTML='►'"></video>
   <div id="btns"><button id="plB" onclick="pl()">►</button>
     <div id="br">
       <div id="prg">
-        <div id="prgInd">
+        <div id="ldPrg">
           <div id="prgFl"></div>
         </div>
       </div><button id="fs" onclick="hd();plr.requestFullscreen();document.exitFullscreen()"><svg>
@@ -39,6 +39,10 @@ svg{stroke-width:2;stroke:#eee}
 
 <script>
    
+vd.onprogress = function() {
+  ldPrg.style.width = vd.buffered.end(0) / vd.duration * 100 + '%'
+};
+
 var prgFrq, hdTmr, prgCh;
 
 function tmCnt() {
@@ -64,7 +68,7 @@ function pl() {
   } else if (btns.className != '') {
     btns.className = '';
     hd()
-  } else clearTimeout(hdTmr), vd.pause(), plB.innerHTML = '►', clearInterval(prgFrq)
+  } else clearTimeout(hdTmr), vd.pause(), clearInterval(prgFrq), plB.innerHTML = '►'
 };
 
 function prgFlF(psX) {
