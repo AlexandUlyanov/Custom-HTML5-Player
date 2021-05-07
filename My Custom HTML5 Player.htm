@@ -22,81 +22,49 @@ svg{stroke-width:2;stroke:#eee}
 
 </style><title>Custom HTML5 Player</title></head><body>
 
-<div id="plr"><video id="vd" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" onclick="pl()" ondurationchange="drtn.innerHTML=parseInt(vd.duration/60)+':'+parseInt(vd.duration%60)" onended="clearInterval(prgFrq);clearTimeout(hdTmr);btns.className='';plB.innerHTML='►'"></video>
-  <div id="btns"><button id="plB" onclick="pl()">►</button>
+<div id="plr">
+  <video id="vd" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
+       onclick="pl()" ondurationchange="drtn.innerHTML=parseInt(vd.duration/60)+':'+parseInt(vd.duration%60)"
+       onended="clearInterval(prgFrq);clearTimeout(hdTmr);btns.className='';plB.innerHTML='►'">
+  </video>
+  <div id="btns">
+    <button id="plB" onclick="pl()">►</button>
     <div id="br">
-      <div id="prg"><canvas id="ldPrg"></canvas>
+      <div id="prg">
+        <svg id="ldPrg"><path id="prgB" d=""/></svg>
         <div id="prgFl"></div>
-      </div><button id="fs" onclick="hd();plr.requestFullscreen();document.exitFullscreen()"><svg>
-          <path d="M4,21V16H9M4,25V30H9M17,16H22V21M22,25V30H17" /></svg></button><button id="mn" onclick="hd();optns.style.display='block'"><svg>
-          <path d="M12,16H32M12,23H32M12,30H32" /></svg></button><span id="crTm">0:0</span><span id="drtn"></span>
-      <div id="optns"><button onclick="hd();vd.currentTime=vd.currentTime-10;tmCnt()">‹10s</button><button onclick="hd();vd.currentTime=vd.currentTime+10;tmCnt()">10s›</button><button id="slw" onclick="hd();vd.playbackRate=vd.playbackRate-.5;slw.innerHTML=vd.playbackRate+'x';fst.innerHTML='»'">«</button><button id="fst" onclick="hd();vd.playbackRate=vd.playbackRate+.5;fst.innerHTML=vd.playbackRate+'x';slw.innerHTML='«'">»</button></div>
+      </div>
+      <button id="fs" onclick="hd();plr.requestFullscreen();document.exitFullscreen()"><svg><path d="M4,21V16H9M4,25V30H9M17,16H22V21M22,25V30H17"/></svg></button>
+      <button id="mn" onclick="hd();optns.style.display='block'"><svg><path d="M12,16H32M12,23H32M12,30H32"/></svg></button>
+      <span id="crTm">0:0</span><span id="drtn"></span>
+      <div id="optns">
+        <button onclick="hd();vd.currentTime=vd.currentTime-10;tmCnt()">‹10s</button><button onclick="hd();vd.currentTime=vd.currentTime+10;tmCnt()">10s›</button>
+        <button id="slw" onclick="hd();vd.playbackRate=vd.playbackRate-.5;slw.innerHTML=vd.playbackRate+'x';fst.innerHTML='»'">«</button>
+        <button id="fst" onclick="hd();vd.playbackRate=vd.playbackRate+.5;fst.innerHTML=vd.playbackRate+'x';slw.innerHTML='«'">»</button>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-   
-var context = ldPrg.getContext('2d');
-context.fillStyle = '#eee';
+vd.onprogress=function(){for(i=0;i<vd.buffered.length;i++){cnv=ldPrg.clientWidth/vd.duration;
+prgB.setAttribute('d',prgB.getAttribute('d')+'M'+vd.buffered.start(i)*cnv+',1'+' '+vd.buffered.end(i)*cnv+',1')}};
 
-vd.onprogress = function() {
-  for (i = 0; i < vd.buffered.length; i++) {
+var prgFrq,hdTmr,prgCh;
 
-    var startX = vd.buffered.start(i) * ldPrg.width / vd.duration;
-    var endX = vd.buffered.end(i) * ldPrg.width / vd.duration;
-    var bfWidth = endX - startX;
+function tmCnt(){prgFl.style.width=vd.currentTime/vd.duration*100+'%';
+crTm.innerHTML=parseInt(vd.currentTime/60)+':'+parseInt(vd.currentTime%60)};
 
-    context.fillRect(startX, 0, bfWidth, ldPrg.height)
-  }
+function hd(){if(!vd.paused)clearTimeout(hdTmr),hdTmr=setTimeout(function(){btns.className='hdn';optns.style=''},66000)};
+
+function pl(){if(vd.paused)
+{vd.play();plB.innerHTML='<svg><path d="M12,14V32M24,14V32"/></svg>';prgFrq=setInterval(function(){tmCnt()},1000);hd()}
+else if(btns.className!='')
+{btns.className='';hd()}
+else clearTimeout(hdTmr),vd.pause(),clearInterval(prgFrq),plB.innerHTML='►'
 };
 
-
-
-var prgFrq, hdTmr, prgCh;
-
-function tmCnt() {
-  prgFl.style.width = vd.currentTime / vd.duration * 100 + '%';
-  crTm.innerHTML = parseInt(vd.currentTime / 60) + ':' + parseInt(vd.currentTime % 60)
-};
-
-function hd() {
-  if (!vd.paused) clearTimeout(hdTmr), hdTmr = setTimeout(function() {
-    btns.className = 'hdn';
-    optns.style = ''
-  }, 66000)
-};
-
-function pl() {
-  if (vd.paused) {
-    vd.play();
-    plB.innerHTML = '<svg><path d="M12,14V32M24,14V32"/></svg>';
-    prgFrq = setInterval(function() {
-      tmCnt()
-    }, 1000);
-    hd()
-  } else if (btns.className != '') {
-    btns.className = '';
-    hd()
-  } else clearTimeout(hdTmr), vd.pause(), clearInterval(prgFrq), plB.innerHTML = '►'
-};
-
-function prgFlF(psX) {
-  hd();
-  ps = psX.offsetX / prg.clientWidth;
-  vd.currentTime = ps * vd.duration;
-  tmCnt()
-};
-prg.onpointerdown = function(psX) {
-  prgCh = true;
-  prgFlF(psX)
-};
-prg.onpointermove = function(psX) {
-  if (prgCh == true) prgFlF(psX)
-};
-window.onpointerup = function() {
-  prgCh = false;
-  window.getSelection().removeAllRanges()
-}
-
+function prgFlF(psX){hd();ps=psX.offsetX/prg.clientWidth;vd.currentTime=ps*vd.duration;tmCnt()};
+prg.onpointerdown=function(psX){prgCh=true;prgFlF(psX)};prg.onpointermove=function(psX){if(prgCh==true)prgFlF(psX)};
+window.onpointerup=function(){prgCh=false;window.getSelection().removeAllRanges()}
 </script></body></html>
