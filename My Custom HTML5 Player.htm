@@ -9,51 +9,37 @@ button{width:48px;height:48px;overflow:hidden;border:0;color:#eee}
 #plB,#br,#prg,#optns{position:absolute}
 #plB{top:calc(50% - 24px);left:calc(50% - 24px);font-size:25px}
 #prg,#crTm{margin-left:18px}
-#prg{width:calc(100% - 114px);height:48px}
-#ldPrg,#prgFl{margin-top:0;width:0;height:3px}
-#ldPrg{width:100%;background:grey}
+#prg{left:0;width:calc(100% - 114px);height:48px;stroke:#f00;fill:#f00}
 #fs,#mn,#drtn{float:right}
 span{float:left;margin-top:20px;color:#3af}
 #optns,.hdn{display:none}
 #optns{right:48px}
 button,#br{background:#222}
 svg{stroke-width:2;stroke:#eee}
-#plB,#prgFl{background:#f00}
+#plB{background:#f00}
 
 </style><title>Custom HTML5 Player</title></head><body>
 
-<div id="plr">
-  <video id="vd" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
-       onclick="pl()" ondurationchange="drtn.innerHTML=parseInt(vd.duration/60)+':'+parseInt(vd.duration%60)"
-       onended="clearInterval(prgFrq);clearTimeout(hdTmr);btns.className='';plB.innerHTML='►'">
-  </video>
-  <div id="btns">
-    <button id="plB" onclick="pl()">►</button>
-    <div id="br">
-      <div id="prg">
-        <svg id="ldPrg"><path id="prgB" d=""/></svg>
-        <div id="prgFl"></div>
-      </div>
-      <button id="fs" onclick="hd();plr.requestFullscreen();document.exitFullscreen()"><svg><path d="M4,21V16H9M4,25V30H9M17,16H22V21M22,25V30H17"/></svg></button>
-      <button id="mn" onclick="hd();optns.style.display='block'"><svg><path d="M12,16H32M12,23H32M12,30H32"/></svg></button>
-      <span id="crTm">0:0</span><span id="drtn"></span>
-      <div id="optns">
-        <button onclick="hd();vd.currentTime=vd.currentTime-10;tmCnt()">‹10s</button><button onclick="hd();vd.currentTime=vd.currentTime+10;tmCnt()">10s›</button>
-        <button id="slw" onclick="hd();vd.playbackRate=vd.playbackRate-.5;slw.innerHTML=vd.playbackRate+'x';fst.innerHTML='»'">«</button>
-        <button id="fst" onclick="hd();vd.playbackRate=vd.playbackRate+.5;fst.innerHTML=vd.playbackRate+'x';slw.innerHTML='«'">»</button>
-      </div>
+<div id="plr"><video id="vd" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" onclick="pl()" ondurationchange="drtn.innerHTML=parseInt(vd.duration/60)+':'+parseInt(vd.duration%60)" onended="clearInterval(prgFrq);clearTimeout(hdTmr);btns.className='';plB.innerHTML='►'"></video>
+  <div id="btns"><button id="plB" onclick="pl()">►</button>
+    <div id="br"><svg id="prg">
+        <line x1="0" y1="13" x2="100%" y2="13" stroke="#eee" />
+        <path id="bffr" d="" />
+        <rect id="crsr" y="9" width="8" height="8" /></svg><button id="fs" onclick="hd();plr.requestFullscreen();document.exitFullscreen()"><svg>
+          <path d="M9,16H4V25V30H9M17,16H22V30H17" fill="none" /></svg></button><button id="mn" onclick="hd();optns.style.display='block'"><svg>
+          <path d="M12,16H32M12,23H32M12,30H32" /></svg></button><span id="crTm">0:0</span><span id="drtn"></span>
+      <div id="optns"><button onclick="hd();vd.currentTime=vd.currentTime-10;tmCnt()">‹10s</button><button onclick="hd();vd.currentTime=vd.currentTime+10;tmCnt()">10s›</button><button id="slw" onclick="hd();vd.playbackRate=vd.playbackRate-.5;slw.innerHTML=vd.playbackRate+'x';fst.innerHTML='»'">«</button><button id="fst" onclick="hd();vd.playbackRate=vd.playbackRate+.5;fst.innerHTML=vd.playbackRate+'x';slw.innerHTML='«'">»</button></div>
     </div>
   </div>
 </div>
 
 <script>
-vd.onprogress=function(){for(i=0;i<vd.buffered.length;i++){cnv=ldPrg.clientWidth/vd.duration;
-prgB.setAttribute('d',prgB.getAttribute('d')+'M'+vd.buffered.start(i)*cnv+',1'+' '+vd.buffered.end(i)*cnv+',1')}};
+vd.onprogress=function(){for(i=0;i<vd.buffered.length;i++){cnv=prg.clientWidth/vd.duration;
+bffr.setAttribute('d',bffr.getAttribute('d')+'M'+vd.buffered.start(i)*cnv+',13'+' '+vd.buffered.end(i)*cnv+',13')}};
 
 var prgFrq,hdTmr,prgCh;
 
-function tmCnt(){prgFl.style.width=vd.currentTime/vd.duration*100+'%';
-crTm.innerHTML=parseInt(vd.currentTime/60)+':'+parseInt(vd.currentTime%60)};
+function tmCnt(){crsr.setAttribute('x',vd.currentTime/vd.duration*100+'%');crTm.innerHTML=parseInt(vd.currentTime/60)+':'+parseInt(vd.currentTime%60)};
 
 function hd(){if(!vd.paused)clearTimeout(hdTmr),hdTmr=setTimeout(function(){btns.className='hdn';optns.style=''},66000)};
 
@@ -64,7 +50,7 @@ else if(btns.className!='')
 else clearTimeout(hdTmr),vd.pause(),clearInterval(prgFrq),plB.innerHTML='►'
 };
 
-function prgFlF(psX){hd();ps=psX.offsetX/prg.clientWidth;vd.currentTime=ps*vd.duration;tmCnt()};
+function prgFlF(psX){hd();vd.currentTime=psX.offsetX/prg.clientWidth*vd.duration;tmCnt()};
 prg.onpointerdown=function(psX){prgCh=true;prgFlF(psX)};prg.onpointermove=function(psX){if(prgCh==true)prgFlF(psX)};
 window.onpointerup=function(){prgCh=false;window.getSelection().removeAllRanges()}
 </script></body></html>
